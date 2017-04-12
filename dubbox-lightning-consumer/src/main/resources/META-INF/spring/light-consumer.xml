@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="light" owner="michael" organization="onedt"/>
+
+    <dubbo:registry address="zookeeper://localhost:2181"/>
+
+    <dubbo:consumer timeout="5000" retries="2"/>
+
+    <dubbo:annotation package="com.alibaba.lightning.consumer" />
+
+    <dubbo:protocol name="rest" port="8888" threads="500" contextpath="services" server="tomcat" accepts="500"
+                    extension="com.alibaba.lightning.consumer.extension.TraceInterceptor,
+                    com.alibaba.lightning.consumer.extension.TraceFilter,
+                    com.alibaba.lightning.consumer.extension.ClientTraceFilter,
+                    com.alibaba.lightning.consumer.extension.DynamicTraceBinding,
+                    com.alibaba.lightning.consumer.extension.CustomExceptionMapper,
+                    com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter"/>
+
+    <dubbo:reference id="remoteControlService" interface="com.alibaba.lightning.api.RemoteControlService"/>
+
+    <dubbo:service interface="com.alibaba.lightning.consumer.RemoteServiceRest" ref="remoteServiceRest"  protocol="rest" validation="true"/>
+
+    <bean id="remoteServiceRest" class="com.alibaba.lightning.consumer.RemoteServiceRestImpl">
+        <property name="remoteControlService" ref="remoteControlService" />
+    </bean>
+
+
+</beans>

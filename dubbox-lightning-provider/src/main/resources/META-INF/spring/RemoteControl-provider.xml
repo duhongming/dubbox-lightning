@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    
+    <dubbo:application name="onedt" environment="develop" owner="michael"/>
+
+    <dubbo:registry address="zookeeper://localhost:2181"/>
+
+    <dubbo:provider protocol="dubbo" port="10001" threads="200" serialization="dubbo"/>
+
+    <bean id="remoteControlService" class="com.alibaba.lightning.provider.RemoteControlServiceIml"/>
+
+    <dubbo:service timeout="5000"  retries="2" interface="com.alibaba.lightning.api.RemoteControlService" ref="remoteControlService"/>
+</beans>
